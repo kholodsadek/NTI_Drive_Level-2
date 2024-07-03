@@ -1,0 +1,30 @@
+/*
+ * DC_Motor_Interface.h
+ *
+ *  Created on: Oct 12, 2023
+ *      Author: hp
+ */
+
+#ifndef DC_MOTOR_INTERFACE_H_
+#define DC_MOTOR_INTERFACE_H_
+
+#include "../../01-LIB/STD_TYPES.h"
+#include "../../04-MCAL/01-DIO/DIO_Interface.h"
+
+typedef struct{
+	u8 motor_port;
+	u8 motor_pin1;
+	u8 motor_pin2;
+	u8 motor_pin3;
+	u8 motor_pin4;
+} Motor;
+
+
+void DCMotor_init(Motor *motor);
+void DCMotor_OFF(Motor *motor);
+void DCMotor_SetCW(Motor *motor);
+void DCMotor_SetCCW(Motor *motor);
+void DCMotor_Toggle(Motor *motor);
+
+
+#endif /* DC_MOTOR_INTERFACE_H_ */
