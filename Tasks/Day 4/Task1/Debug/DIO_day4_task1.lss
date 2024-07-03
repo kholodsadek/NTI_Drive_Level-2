@@ -1,0 +1,152 @@
+
+DIO_day4_task1.elf:     file format elf32-avr
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .text         0000010c  00000000  00000000  00000054  2**1
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  1 .stab         00000168  00000000  00000000  00000160  2**2
+                  CONTENTS, READONLY, DEBUGGING
+  2 .stabstr      00000231  00000000  00000000  000002c8  2**0
+                  CONTENTS, READONLY, DEBUGGING
+
+Disassembly of section .text:
+
+00000000 <__vectors>:
+   0:	0c 94 2a 00 	jmp	0x54	; 0x54 <__ctors_end>
+   4:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+   8:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+   c:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  10:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  14:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  18:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  1c:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  20:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  24:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  28:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  2c:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  30:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  34:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  38:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  3c:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  40:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  44:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  48:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  4c:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  50:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+
+00000054 <__ctors_end>:
+  54:	11 24       	eor	r1, r1
+  56:	1f be       	out	0x3f, r1	; 63
+  58:	cf e5       	ldi	r28, 0x5F	; 95
+  5a:	d8 e0       	ldi	r29, 0x08	; 8
+  5c:	de bf       	out	0x3e, r29	; 62
+  5e:	cd bf       	out	0x3d, r28	; 61
+  60:	0e 94 36 00 	call	0x6c	; 0x6c <main>
+  64:	0c 94 84 00 	jmp	0x108	; 0x108 <_exit>
+
+00000068 <__bad_interrupt>:
+  68:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
+
+0000006c <main>:
+#define PORTB (*(volatile unsigned char*)0x38)
+#define DDRB (*(volatile unsigned char*)0x37)
+#define PORTC (*(volatile unsigned char*)0x35)
+#define DDRC (*(volatile unsigned char*)0x34)
+
+int main(void){
+  6c:	df 93       	push	r29
+  6e:	cf 93       	push	r28
+  70:	cd b7       	in	r28, 0x3d	; 61
+  72:	de b7       	in	r29, 0x3e	; 62
+	DDRA =  0b00000000;  //0
+  74:	ea e3       	ldi	r30, 0x3A	; 58
+  76:	f0 e0       	ldi	r31, 0x00	; 0
+  78:	10 82       	st	Z, r1
+	DDRB =  0b10000000;	//128
+  7a:	e7 e3       	ldi	r30, 0x37	; 55
+  7c:	f0 e0       	ldi	r31, 0x00	; 0
+  7e:	80 e8       	ldi	r24, 0x80	; 128
+  80:	80 83       	st	Z, r24
+	DDRC =  0b11111111;  //255
+  82:	e4 e3       	ldi	r30, 0x34	; 52
+  84:	f0 e0       	ldi	r31, 0x00	; 0
+  86:	8f ef       	ldi	r24, 0xFF	; 255
+  88:	80 83       	st	Z, r24
+
+	if ((DDRA > DDRB) && (DDRA > DDRC)) //A
+  8a:	ea e3       	ldi	r30, 0x3A	; 58
+  8c:	f0 e0       	ldi	r31, 0x00	; 0
+  8e:	90 81       	ld	r25, Z
+  90:	e7 e3       	ldi	r30, 0x37	; 55
+  92:	f0 e0       	ldi	r31, 0x00	; 0
+  94:	80 81       	ld	r24, Z
+  96:	89 17       	cp	r24, r25
+  98:	68 f4       	brcc	.+26     	; 0xb4 <main+0x48>
+  9a:	ea e3       	ldi	r30, 0x3A	; 58
+  9c:	f0 e0       	ldi	r31, 0x00	; 0
+  9e:	90 81       	ld	r25, Z
+  a0:	e4 e3       	ldi	r30, 0x34	; 52
+  a2:	f0 e0       	ldi	r31, 0x00	; 0
+  a4:	80 81       	ld	r24, Z
+  a6:	89 17       	cp	r24, r25
+  a8:	28 f4       	brcc	.+10     	; 0xb4 <main+0x48>
+	{
+		PORTA = 0b11111111;
+  aa:	eb e3       	ldi	r30, 0x3B	; 59
+  ac:	f0 e0       	ldi	r31, 0x00	; 0
+  ae:	8f ef       	ldi	r24, 0xFF	; 255
+  b0:	80 83       	st	Z, r24
+  b2:	29 c0       	rjmp	.+82     	; 0x106 <main+0x9a>
+	}else if ((DDRB > DDRA) && (DDRB > DDRC)){ //B
+  b4:	e7 e3       	ldi	r30, 0x37	; 55
+  b6:	f0 e0       	ldi	r31, 0x00	; 0
+  b8:	90 81       	ld	r25, Z
+  ba:	ea e3       	ldi	r30, 0x3A	; 58
+  bc:	f0 e0       	ldi	r31, 0x00	; 0
+  be:	80 81       	ld	r24, Z
+  c0:	89 17       	cp	r24, r25
+  c2:	68 f4       	brcc	.+26     	; 0xde <main+0x72>
+  c4:	e7 e3       	ldi	r30, 0x37	; 55
+  c6:	f0 e0       	ldi	r31, 0x00	; 0
+  c8:	90 81       	ld	r25, Z
+  ca:	e4 e3       	ldi	r30, 0x34	; 52
+  cc:	f0 e0       	ldi	r31, 0x00	; 0
+  ce:	80 81       	ld	r24, Z
+  d0:	89 17       	cp	r24, r25
+  d2:	28 f4       	brcc	.+10     	; 0xde <main+0x72>
+		PORTB = 0b11111111;
+  d4:	e8 e3       	ldi	r30, 0x38	; 56
+  d6:	f0 e0       	ldi	r31, 0x00	; 0
+  d8:	8f ef       	ldi	r24, 0xFF	; 255
+  da:	80 83       	st	Z, r24
+  dc:	14 c0       	rjmp	.+40     	; 0x106 <main+0x9a>
+	}else if ((DDRC > DDRA) && (DDRC > DDRB)){ //C
+  de:	e4 e3       	ldi	r30, 0x34	; 52
+  e0:	f0 e0       	ldi	r31, 0x00	; 0
+  e2:	90 81       	ld	r25, Z
+  e4:	ea e3       	ldi	r30, 0x3A	; 58
+  e6:	f0 e0       	ldi	r31, 0x00	; 0
+  e8:	80 81       	ld	r24, Z
+  ea:	89 17       	cp	r24, r25
+  ec:	60 f4       	brcc	.+24     	; 0x106 <main+0x9a>
+  ee:	e4 e3       	ldi	r30, 0x34	; 52
+  f0:	f0 e0       	ldi	r31, 0x00	; 0
+  f2:	90 81       	ld	r25, Z
+  f4:	e7 e3       	ldi	r30, 0x37	; 55
+  f6:	f0 e0       	ldi	r31, 0x00	; 0
+  f8:	80 81       	ld	r24, Z
+  fa:	89 17       	cp	r24, r25
+  fc:	20 f4       	brcc	.+8      	; 0x106 <main+0x9a>
+		PORTC = 0b11111111;
+  fe:	e5 e3       	ldi	r30, 0x35	; 53
+ 100:	f0 e0       	ldi	r31, 0x00	; 0
+ 102:	8f ef       	ldi	r24, 0xFF	; 255
+ 104:	80 83       	st	Z, r24
+ 106:	ff cf       	rjmp	.-2      	; 0x106 <main+0x9a>
+
+00000108 <_exit>:
+ 108:	f8 94       	cli
+
+0000010a <__stop_program>:
+ 10a:	ff cf       	rjmp	.-2      	; 0x10a <__stop_program>
